@@ -7,6 +7,10 @@
     "start": "tsc && node dist/app.js",
     "dev": "tsc && nodemon dist/app.js"
   },
+  "_moduleAliases": {
+    "@modules": "dist/rest/modules",
+    "@services": "dist/services"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,8 +23,13 @@
     "typescript-eslint": "^8.6.0"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.6.3",
     "zod": "^3.23.8"
   }
