@@ -6,6 +6,7 @@ dotenv.config();
 const schema = z.object({
   MONGO_URI: z.string(),
   PORT: z.coerce.number(),
+  JWT_SECRET: z.string(),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
