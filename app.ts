@@ -1,10 +1,12 @@
 import connectDB from "./config/db";
-import authRoutes from "./routes/auth.route";
 import cors from "cors";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
 import express from "express";
 import env from "./env";
+
+import authRoutes from "./routes/auth.route";
+import taskRoutes from "./routes/task.route";
 
 const app = express();
 const PORT = env.PORT || 5000;
@@ -20,9 +22,11 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.json());
+
 app.use("/auth", authRoutes);
+app.use("/task", taskRoutes);
 
 app.listen(PORT, () => {
   console.log(`Connected to server on PORT ${PORT}`);
