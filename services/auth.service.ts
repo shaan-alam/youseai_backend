@@ -8,14 +8,11 @@ export const createUser = async ({
   email,
   password,
 }: CreateUserParams) => {
-  const newUser = new User({ name, email, password });
-  await newUser.save();
+  const user = await new User({ name, email, password });
+  const newuser = await user.save();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, ...user } = newUser;
-
-  const token = await generateToken({ userId: `${newUser._id}` });
-  return { user, token };
+  const token = await generateToken({ userId: `${newuser._id}` });
+  return { user: newuser, token };
 };
 
 export const validateUserLogin = async ({

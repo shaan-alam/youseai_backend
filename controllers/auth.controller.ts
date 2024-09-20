@@ -18,7 +18,7 @@ export const register = async (
   try {
     const existingUser = await User.findOne({ email }).select("-password");
     if (existingUser) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const { user, token } = await authServices.createUser({
@@ -26,7 +26,7 @@ export const register = async (
       email,
       password,
     });
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, { httpOnly: true }).send(token);;
 
     res.json({ user, token });
   } catch (err: unknown) {
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
     if (error) {
       return res.status(status_code).json({ message: error });
     }
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, { httpOnly: true }).send(token);
 
     res.json({ user, token });
   } catch (err: unknown) {
