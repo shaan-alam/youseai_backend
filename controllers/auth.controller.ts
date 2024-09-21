@@ -26,7 +26,11 @@ export const register = async (
       email,
       password,
     });
-    res.cookie("token", token, { httpOnly: true }).send(token);;
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
 
     res.json({ user, token });
   } catch (err: unknown) {
@@ -48,7 +52,11 @@ export const login = async (req: Request, res: Response) => {
     if (error) {
       return res.status(status_code).json({ message: error });
     }
-    res.cookie("token", token, { httpOnly: true }).send(token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
 
     res.json({ user, token });
   } catch (err: unknown) {
