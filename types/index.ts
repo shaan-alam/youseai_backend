@@ -18,3 +18,8 @@ export type GenerateTokenParams = {
 export interface IRequest<T> extends Request {
   body: T;
 }
+
+export type TaskFilter = {
+  status?: string;
+  priority?: string
+}

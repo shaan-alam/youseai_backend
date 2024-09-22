@@ -26,7 +26,11 @@ export const register = async (
       email,
       password,
     });
-    res.cookie("token", token, { httpOnly: true }).send(token);;
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
 
     res.json({ user, token });
   } catch (err: unknown) {
@@ -48,7 +52,11 @@ export const login = async (req: Request, res: Response) => {
     if (error) {
       return res.status(status_code).json({ message: error });
     }
-    res.cookie("token", token, { httpOnly: true }).send(token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
 
     res.json({ user, token });
   } catch (err: unknown) {
@@ -56,11 +64,24 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getCurrentProfile = async (
+  req: Request & { user: { userId: string } },
+  res: Response
+) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
-    res.json(user);
+    const userId = req.user.userId;
+    const user = await User.find({ _id: userId }).select("-password");
+    return res.json({ user: user[0] });
   } catch (err: unknown) {
     res.status(500).json({ message: "Something went wrong!", err });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("token");
+    return res.json({ message: "Logged out!" });
+  } catch (err) {
+    return res.status(500).json({ message: "Something went wrong!", err });
   }
 };

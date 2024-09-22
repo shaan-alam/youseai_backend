@@ -1,25 +1,33 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import env from "../env";
 
-interface AuthRequest extends Request {
-  user?: any;
+interface AuthenticatedRequest extends Request {
+  user?: JwtPayload | string;
 }
 
-export const authMiddleware = (
-  req: AuthRequest,
+export const verifyUser = (
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ msg: "No token, authorization denied" });
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    req.user = (decoded as any).user;
+    const token = req.cookies["token"]; // assuming the cookie name is 'auth-token'
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Authentication token is missing" });
+    }
+
+    const secret = env.JWT_SECRET;
+    const decoded = jwt.verify(token, secret) as JwtPayload;
+
+    req.user = decoded;
+
     next();
-  } catch (e) {
-    res.status(401).json({ msg: "Token is not valid" });
+  } catch (error) {
+    console.error("Authentication error:", error);
+    return res.status(401).json({ message: "Unauthorized Access" });
   }
 };
